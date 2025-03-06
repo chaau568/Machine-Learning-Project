@@ -1,15 +1,14 @@
-import matplotlib #type: ignore
-matplotlib.use('Agg')  # ใช้ non-GUI backend
+import matplotlib 
+matplotlib.use('Agg')  
 
 import io
 import base64
-import tensorflow as tf #type: ignore
-import pandas as pd #type: ignore
-import numpy as np #type: ignore
-import matplotlib.pyplot as plt #type: ignore
+import tensorflow as tf
+import pandas as pd 
+import numpy as np 
+import matplotlib.pyplot as plt 
 
 def predict(user_input):
-    # ตรวจสอบขนาดของ user_input
     if user_input.shape != (28, 28):
         print("Input image must be of size 28x28")
         return
@@ -24,13 +23,8 @@ def predict(user_input):
     # ทำนายผล
     predictions = loaded_model.predict(user_input)[0]  # ได้เป็น array ขนาด (10,)
     
-    # 1️⃣ คลาสที่โมเดลทำนาย
     predicted_class = np.argmax(predictions)  
-
-    # 2️⃣ ค่าความมั่นใจของคลาสที่ทำนาย
     confidence = predictions[predicted_class] * 100  
-
-    # 3️⃣ ค่าความมั่นใจของทุกคลาส
     all_confidences = predictions * 100  
 
     result = {
@@ -40,7 +34,6 @@ def predict(user_input):
     }
     return result
 def graph(confidence):
-    # เตรียมข้อมูลสำหรับแสดงผล
     classes = np.arange(10)  # หมายเลข 0-9 (10 คลาส)
     confidence_scores = [c * 1 for c in confidence]  # แปลงเป็นเปอร์เซ็นต์
 
@@ -55,7 +48,6 @@ def graph(confidence):
     plt.xticks(classes)  # กำหนดให้แกน X เป็น 0-9
     plt.ylim(0, 100)  # กำหนดช่วง Y ให้อยู่ที่ 0-100%
 
-    # แสดงค่าความมั่นใจบนแท่ง
     for i, score in enumerate(confidence_scores):
         plt.text(i, score + 2, f"{score:.2f}%", ha='center', fontsize=10)
 
