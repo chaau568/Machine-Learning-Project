@@ -1,15 +1,14 @@
-import pandas as pd #type: ignore
-import numpy as np #type: ignore
-import matplotlib.pyplot as plt #type: ignore 
-import neattext.functions as nfx #type: ignore
-from sklearn.model_selection import train_test_split #type: ignore
-from sklearn.pipeline import Pipeline #type: ignore
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer #type: ignore
-from sklearn.svm import SVC #type: ignore
-from sklearn.ensemble import RandomForestClassifier #type: ignore
-from sklearn.linear_model import LogisticRegression #type: ignore
+import pandas as pd 
+import numpy as np 
+import matplotlib.pyplot as plt 
+import neattext.functions as nfx 
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline 
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer 
+from sklearn.svm import SVC 
+from sklearn.ensemble import RandomForestClassifier 
+from sklearn.linear_model import LogisticRegression 
 import pickle
-import joblib #type: ignore
 
 # โหลดข้อมูล และ เเสดงข้อมูล
 data = pd.read_csv("myapp\data\emotion\emotion_dataset.csv")
@@ -25,9 +24,9 @@ data['Clean_Text'] = data['Text'].apply(nfx.remove_userhandles)
 # print(data[['Text', 'Clean_Text']].sample(20)) # เช็คว่าหลังจาก ทำความสะอาดข้อมูลแล้วได้ผลหรือไม่
 
 # เตรียมข้อมูลให้ model
-x = data['Clean_Text'] # ข้อความ
-y = data['Emotion'] # คำตอบ
-X_train,X_test,y_train,y_test = train_test_split(x,y,test_size=0.3,random_state=42) # เป็นการแบ่งชุดข้อมูล test train ไว้ให้ model
+x = data['Clean_Text'] 
+y = data['Emotion'] 
+X_train,X_test,y_train,y_test = train_test_split(x,y,test_size=0.3,random_state=42) 
 
 vectorizer = CountVectorizer()
 lr_classifier = LogisticRegression()
@@ -59,5 +58,3 @@ print(f"Accuracy: {accuracy}") #accuracy: 0.6323050392795555
 # บันทึกโมเดล
 with open('myapp\data\emotion\model.pkl', 'wb') as f:
   pickle.dump(pipe_lr, f)
-
-# joblib.dump(pipe_lr, 'model.joblib')
