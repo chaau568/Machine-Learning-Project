@@ -57,7 +57,7 @@ print(f"Accuracy: {accuracy}") #accuracy: 0.6323050392795555
 # แต่ svm ใช้ทรัพยากรมากกว่ามาก
 
 # บันทึกโมเดล
-# with open('myapp\data\emotion\model.pkl', 'wb') as f:
-#   pickle.dump(pipe_lr, f)
+with open('myapp\data\emotion\model.pkl', 'wb') as f:
+  pickle.dump(pipe_lr, f)
 
-joblib.dump(pipe_lr, 'model.joblib')
+# joblib.dump(pipe_lr, 'model.joblib')
