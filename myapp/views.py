@@ -1,12 +1,12 @@
 import json
 import base64
-import numpy as np #type: ignore
-import pandas as pd #type: ignore
-from PIL import Image #type: ignore
+import numpy as np 
+import pandas as pd 
+from PIL import Image 
 from io import BytesIO
-from django.http import JsonResponse #type: ignore
-from django.views.decorators.csrf import csrf_exempt #type: ignore
-from django.shortcuts import render, redirect #type: ignore
+from django.http import JsonResponse 
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render
 from .data.emotion import use_model as model_emo
 from .data.number import used_model as model_num
 from .models import User_Details
@@ -73,7 +73,6 @@ def number_details(request):
     accuracy_loss_plot = base64.b64encode(img_file.read()).decode('utf-8')
 
   class_count_path = pd.read_csv('myapp/data/details_data/class_counts.csv')
-  # แสดงชื่อคอลัมน์
   print(class_count_path.columns)
   class_details = class_count_path[['Class', 'Train', 'Test']]
   class_count = class_details.to_dict(orient='records')
@@ -88,29 +87,24 @@ def number_model(request):
   return render(request, 'number_model.html')
 
 def process_image_function(image_data):
-  image_data = image_data.split(",")[1]  # ตัด "data:image/png;base64,"
+  image_data = image_data.split(",")[1]  
   img = Image.open(BytesIO(base64.b64decode(image_data)))
 
-  img = img.convert("L").resize((28, 28))  # แปลงเป็นขาวดำ + ปรับขนาด 28x28
-  img_array = np.array(img) / 255.0  # Normalize เป็น 0-1
+  img = img.convert("L").resize((28, 28))  
+  img_array = np.array(img) / 255.0  
 
-  # ส่งภาพไปยังโมเดลของคุณเพื่อทำนาย
   result = model_num.predict(img_array)
+  graph = model_num.graph(result['all_predictions'])  
 
-  # เพิ่มค่ากราฟ (ผลลัพธ์ของการทำนายแต่ละคลาส) 
-  graph = model_num.graph(result['all_predictions'])  # คุณสามารถดึงกราฟได้จากผลลัพธ์
-
-  # อัพเดตตัวตรวจสอบค่าเก่า
   global check
   check = 1
-  # บันทึกผลลัพธ์ไว้
   global latest_result
   latest_result['predict'] = int(result.get('predict'))
   latest_result['confidence'] = round(float(result.get('confidence')), 4)
   latest_result['graph'] = graph
   addToDB("Digit", latest_result['predict'], latest_result['confidence'])
       
-@csrf_exempt
+# @csrf_exempt
 def process_image(request):
   if request.method == "POST":
     try:
