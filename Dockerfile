@@ -2,7 +2,7 @@
 FROM python:3.10
 
 # สร้าง directory สำหรับงานใน container
-WORKDIR /
+WORKDIR /app
 
 # คัดลอกไฟล์ requirements.txt ไปยัง container
 COPY requirements.txt .
