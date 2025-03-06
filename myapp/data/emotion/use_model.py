@@ -1,13 +1,13 @@
-import matplotlib #type: ignore
-matplotlib.use('Agg')  # ใช้ non-GUI backend
+import matplotlib 
+matplotlib.use('Agg')  
 
 import io
 import os
 import base64
 import pickle
-import numpy as np #type: ignore
-import pandas as pd #type: ignore
-import matplotlib.pyplot as plt #type: ignore
+import numpy as np 
+import pandas as pd 
+import matplotlib.pyplot as plt 
 
 def predict(user_input):
   file_path = os.path.join('myapp', 'data', 'emotion', 'model.pkl')
