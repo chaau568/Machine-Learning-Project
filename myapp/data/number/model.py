@@ -1,8 +1,8 @@
-import tensorflow as tf #type: ignore
-from keras import layers, models #type: ignore
-from keras.callbacks import EarlyStopping #type: ignore
-import numpy as np #type: ignore
-import pandas as pd #type: ignore
+import tensorflow as tf 
+from keras import layers, models 
+from keras.callbacks import EarlyStopping 
+import numpy as np 
+import pandas as pd 
 
 mnist = tf.keras.datasets.mnist
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
