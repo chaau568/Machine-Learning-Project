@@ -2,45 +2,44 @@
 <title>Emotion Model</title>
 {% endblock %} {% block content %}
 <div class="container mt-5">
-  <h2 class="text-center mb-4" style="color: #28a745">Predict Your Input</h2>
-  <form
-    class="form-floating"
-    method="post"
-    action="{% url 'show_result_emo' %}"
-    border-radius:
-    10px;
-  >
-    {% csrf_token %}
-
-    <div class="mb-3">
-      <label for="floatingInputValue" class="form-label"
-        >Input for test prediction</label
-      >
-      <input
-        type="text"
-        class="form-control"
-        id="floatingInputValue"
-        placeholder="Enter text"
-        name="user_input"
-        required
-      />
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4">
+          <h2 class="text-center mb-4 text-success fw-bold">
+            Predict Your Emotion
+          </h2>
+          <form method="post" action="{% url 'show_result_emo' %}">
+            {% csrf_token %}
+            <div class="form-floating mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="floatingInputValue"
+                placeholder="Enter text"
+                name="user_input"
+                required
+              />
+              <label for="floatingInputValue"
+                >Enter text for emotion prediction</label
+              >
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-success btn-lg fw-bold">
+                <i class="fas fa-paper-plane"></i> Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-
-    <div class="d-grid gap-2">
-      <button
-        type="submit"
-        class="btn btn-outline-success btn-lg"
-        border-radius:
-        5px
-      >
-        Submit
-      </button>
-    </div>
-  </form>
+  </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Bootstrap & Font Awesome -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
 {% endblock %}

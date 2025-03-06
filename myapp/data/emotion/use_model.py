@@ -2,18 +2,21 @@ import matplotlib #type: ignore
 matplotlib.use('Agg')  # ใช้ non-GUI backend
 
 import io
+import os
 import base64
 import pickle
-import h5py #type: ignore
 import numpy as np #type: ignore
 import pandas as pd #type: ignore
 import matplotlib.pyplot as plt #type: ignore
-import joblib #type: ignore
 
 def predict(user_input):
-  with open('myapp\data\emotion\model.pkl', 'rb') as f:
-    loaded_model = pickle.load(f)
-  # loaded_model = joblib.load('myapp\data\emotion\model.joblib')
+  file_path = os.path.join('myapp', 'data', 'emotion', 'model.pkl')
+  if os.path.exists(file_path):
+    with open(file_path, 'rb') as f:
+      loaded_model = pickle.load(f)
+    print("Model loaded successfully!")
+  else:
+    print(f"Error: File '{file_path}' not found!")
 
   classes = loaded_model.classes_
 
@@ -31,8 +34,13 @@ def predict(user_input):
   return result
 
 def graph(user_input):
-  with open("myapp\data\emotion\model.pkl", "rb") as f:
-    loaded_model = pickle.load(f)
+  file_path = os.path.join('myapp', 'data', 'emotion', 'model.pkl')
+  if os.path.exists(file_path):
+    with open(file_path, 'rb') as f:
+      loaded_model = pickle.load(f)
+    print("Model loaded successfully!")
+  else:
+    print(f"Error: File '{file_path}' not found!")
 
   classes = loaded_model.classes_
 
