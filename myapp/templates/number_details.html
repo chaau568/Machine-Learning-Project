@@ -1,0 +1,79 @@
+{% extends "base.html" %} {% block title %}
+<title>Digit Classification Model</title>
+{% endblock %} {% block content %}
+<div class="container">
+  <h1>Digit Classification Model</h1>
+
+  <div class="box">
+    <h2>1. Dataset</h2>
+    <p>
+      <strong>แหล่งข้อมูล:</strong>
+      <a href="http://yann.lecun.com/exdb/mnist/" target="_blank"
+        >MNIST Dataset</a
+      >
+    </p>
+    <p><strong>โครงสร้างของ dataset:</strong></p>
+    <ul>
+      <li>Picture column - รูปภาพขนาด 28x28 พิกเซล</li>
+      <li>Label column - ตัวเลขที่เกี่ยวข้องกับรูปภาพ (0-9)</li>
+    </ul>
+    <div class="box mb-4">
+      <p>แสดงจำนวนของแต่ละตัวเลขใน dataset:</p>
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Class</th>
+            <th>Train Class Count</th>
+            <th>Test Class Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for detail in class_details %}
+          <tr>
+            <td>{{ detail.Class }}</td>
+            <td>{{ detail.Train }}</td>
+            <td>{{ detail.Test }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p><strong>ความไม่สมบูรณ์ของ dataset:</strong></p>
+    <ul>
+      <li>
+        รูปภาพต้องถูกแปลงโดยการลดค่าสีในแต่ละพิกเซลลงในช่วง 0-1 โดยหารด้วย 255.0
+      </li>
+      <li>ใช้ Convolutional Neural Network (CNN) เพื่อดึงคุณลักษณะจากรูปภาพ</li>
+    </ul>
+  </div>
+
+  <div class="box">
+    <h2>2. การแบ่งข้อมูล</h2>
+    <p>ใช้ <code>mnist.load_data()</code> เพื่อแบ่งข้อมูลเป็น:</p>
+    <ul>
+      <li>ชุดข้อมูล Train = 60,000 รูปภาพ</li>
+      <li>ชุดข้อมูล Test = 10,000 รูปภาพ</li>
+    </ul>
+  </div>
+
+  <div class="box">
+    <h2>3. ผลการทดสอบโมเดล</h2>
+    <p><strong>โมเดลที่ใช้:</strong> Convolutional Neural Network (CNN)</p>
+    <p><strong>Accuracy:</strong> 99.33%</p>
+  </div>
+  <div class="box">
+    <h2>กราฟ Accuracy และ Loss</h2>
+    <img
+      src="data:image/png;base64,{{ accuracy_loss_plot }}"
+      alt="Accuracy and Loss Graph"
+    />
+  </div>
+  <div class="box">
+    <h2>4. การบันทึกโมเดล</h2>
+    <p>
+      โมเดลถูกบันทึกในไฟล์ <code>.h5</code> โดยใช้ <code>model.save()</code> ของ
+      Keras เพื่อให้โหลดกลับมาใช้ได้ในอนาคต
+    </p>
+  </div>
+</div>
+{% endblock %}

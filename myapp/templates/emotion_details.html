@@ -1,0 +1,96 @@
+{% extends "base.html" %} {% block title %}
+<title>Emotion Details</title>
+{% endblock %} {% block content %}
+<div class="container">
+  <h1>Emotion Classification Model</h1>
+
+  <div class="box">
+    <h2>1. Dataset</h2>
+    <p>
+      <strong>แหล่งข้อมูล:</strong>
+      <a
+        href="https://github.com/sakshisphatak/Text-Emotion-Detection/tree/main/Text%20Emotion%20Detection/data"
+        target="_blank"
+        >GitHub Dataset</a
+      >
+    </p>
+    <p><strong>โครงสร้างของ dataset:</strong></p>
+    <ul>
+      <li>Emotion column - ระบุอารมณ์ของแต่ละข้อความ</li>
+      <li>Text column - ข้อความที่แสดงถึงอารมณ์</li>
+    </ul>
+    <div class="box mb-4">
+      <p>แสดงจำนวนของแต่ละอารมณ์ใน dataset:</p>
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Emotion</th>
+            <th>Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for detail in class_details %}
+          <tr>
+            <td>{{ detail.Emotion }}</td>
+            <td>{{ detail.Count }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p><strong>ความไม่สมบูรณ์ของ dataset:</strong></p>
+    <ul>
+      <li>
+        ข้อความมีสัญลักษณ์พิเศษและอีโมจิ ซึ่งต้องทำความสะอาด (text cleaning)
+      </li>
+      <li>ใช้ <code>neattext</code> ใน Python เพื่อช่วยล้างข้อมูล</li>
+      <li>
+        ใช้ <code>CountVectorizer</code> จาก
+        <code>scikit-learn</code> แปลงข้อความเป็น Bag of Words (BoW)
+      </li>
+    </ul>
+  </div>
+
+  <div class="box">
+    <h2>2. การแบ่งข้อมูล</h2>
+    <p>
+      ใช้ <code>train_test_split</code> จาก
+      <code>scikit-learn</code> แบ่งข้อมูลเป็น:
+    </p>
+    <ul>
+      <li>ชุดข้อมูล Train = 70%</li>
+      <li>ชุดข้อมูล Test = 30%</li>
+    </ul>
+  </div>
+
+  <div class="box">
+    <h2>3. ผลการทดสอบโมเดล</h2>
+    <ul>
+      <li>LogisticRegression: Accuracy = 63.23%</li>
+      <li>SVC (Support Vector Classification): Accuracy = 63.77%</li>
+      <li>RandomForestClassifier: Accuracy = 55.40%</li>
+      {{ details.model_accuracy }}
+    </ul>
+    <div class="box">
+      <h2>กราฟ Accuracy และ Loss</h2>
+      <img
+        src="data:image/png;base64,{{ model_accuracy }}"
+        alt="Accuracy and Loss Graph"
+      />
+    </div>
+    <p>
+      <strong>สรุป:</strong> SVC และ LogisticRegression
+      มีประสิทธิภาพใกล้เคียงกัน แต่ SVC ใช้ทรัพยากรมากกว่า จึงเลือก
+      LogisticRegression
+    </p>
+  </div>
+
+  <div class="box">
+    <h2>4. การบันทึกโมเดล</h2>
+    <p>
+      โมเดลถูกบันทึกในไฟล์ <code>.pkl</code> โดยใช้ <code>pickle</code> ของ
+      Python เพื่อให้โหลดกลับมาใช้ได้ในอนาคต
+    </p>
+  </div>
+</div>
+{% endblock %}

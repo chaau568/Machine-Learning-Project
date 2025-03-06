@@ -1,0 +1,10 @@
+# ละเว้นโฟลเดอร์ venv (virtual environment)
+venv/
+ 
+# ละเว้นไฟล์ที่ไม่ต้องการ
+*.pyc
+*.pyo
+__pycache__/
+*.git
+*.gitignore
+*.DS_Store

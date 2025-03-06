@@ -1,0 +1,34 @@
+{% extends "base.html" %} {% block title %}
+<title>Show Result</title>
+{% endblock %} {% block content %}
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Prediction Result</h2>
+
+  {% if details.predict is not None %}
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Text Input</h5>
+      <p class="card-text">{{ details.text }}</p>
+
+      <h5 class="card-title">Prediction</h5>
+      <p class="card-text"><strong>{{ details.predict }}</strong></p>
+
+      <h5 class="card-title">Confidence</h5>
+      <p class="card-text">{{ details.confidence }}</p>
+
+      <h5 class="card-title">Generated Graph</h5>
+      <img
+        src="{{ details.graph }}"
+        alt="Generated Graph"
+        class="img-fluid rounded mx-auto d-block"
+      />
+    </div>
+  </div>
+  {% else %}
+  <div class="alert alert-warning mt-4" role="alert">
+    No prediction available. Please provide input text for prediction.
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

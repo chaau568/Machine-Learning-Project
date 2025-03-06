@@ -1,0 +1,37 @@
+{% extends "base.html" %} {% block title %}
+<title>Home - Machine Learning Projects</title>
+{% endblock %} {% block content %}
+<div class="container mt-5">
+  <div class="text-center">
+    <h1 class="display-4">Welcome to Our Machine Learning Website</h1>
+    <p class="lead">
+      Built with Django Framework to handle various request operations.
+    </p>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Emotion Classification</h5>
+          <p class="card-text">
+            Exploring how Machine Learning can be used to classify emotions from
+            text input.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Digit Classification</h5>
+          <p class="card-text">
+            Utilizing Neural Networks to recognize handwritten digits
+            accurately.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

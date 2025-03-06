@@ -1,0 +1,46 @@
+{% extends "base.html" %} {% block title %}
+<title>Emotion Model</title>
+{% endblock %} {% block content %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4" style="color: #28a745">Predict Your Input</h2>
+  <form
+    class="form-floating"
+    method="post"
+    action="{% url 'show_result_emo' %}"
+    border-radius:
+    10px;
+  >
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label for="floatingInputValue" class="form-label"
+        >Input for test prediction</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        id="floatingInputValue"
+        placeholder="Enter text"
+        name="user_input"
+        required
+      />
+    </div>
+
+    <div class="d-grid gap-2">
+      <button
+        type="submit"
+        class="btn btn-outline-success btn-lg"
+        border-radius:
+        5px
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+{% endblock %}

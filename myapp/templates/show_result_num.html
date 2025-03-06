@@ -1,0 +1,55 @@
+{% extends "base.html" %} {% block title %}
+<title>Number Classification Model</title>
+{% endblock %} {% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="text-center">
+        <h2 class="mb-4 fw-bold">Prediction Result</h2>
+      </div>
+
+      {% if details is not None %}
+      <div class="card shadow-lg">
+        <div class="card-body">
+          <h4 class="card-title text-primary">Prediction Details</h4>
+
+          <table class="table table-bordered mt-3">
+            <tbody>
+              <tr>
+                <th scope="row" class="w-25">Prediction</th>
+                <td>
+                  <strong class="text-success fs-4"
+                    >{{ details.predict }}</strong
+                  >
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Confidence</th>
+                <td>
+                  <span class="text-warning fs-5"
+                    >{{ details.confidence }}%</span
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5 class="mt-4 text-secondary">Generated Graph</h5>
+          <div class="text-center mt-3">
+            <img
+              src="{{ details.graph }}"
+              alt="Generated Graph"
+              class="img-fluid rounded shadow"
+            />
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="alert alert-warning mt-4 text-center" role="alert">
+        ⚠ No prediction available. Please provide an image for prediction.
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
