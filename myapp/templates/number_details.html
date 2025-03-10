@@ -1,21 +1,24 @@
 {% extends "base.html" %} {% block title %}
 <title>Digit Classification Model</title>
 {% endblock %} {% block content %}
-<div class="container">
-  <h1>Digit Classification Model</h1>
+<div class="container mt-5">
+  <h1 class="text-center mb-4">
+    แบบจำลองการจำแนกตัวเลข (Digit Classification Model)
+  </h1>
 
-  <div class="box">
-    <h2>1. Dataset</h2>
+  <section class="mb-4">
+    <h2>1. ชุดข้อมูล (Dataset)</h2>
     <p>
-      <strong>แหล่งข้อมูล:</strong>
-      <a href="http://yann.lecun.com/exdb/mnist/" target="_blank"
-        >MNIST Dataset</a
-      >
+      <strong>แหล่งที่มา:</strong> MNIST (Modified National Institute of
+      Standards and Technology) ผ่านไลบรารี TensorFlow โดยใช้ Keras
     </p>
-    <p><strong>โครงสร้างของ dataset:</strong></p>
+    <p><strong>คำอธิบาย:</strong> ชุดข้อมูลประกอบด้วย 2 คอลัมน์:</p>
     <ul>
-      <li>Picture column - รูปภาพขนาด 28x28 พิกเซล</li>
-      <li>Label column - ตัวเลขที่เกี่ยวข้องกับรูปภาพ (0-9)</li>
+      <li>
+        คอลัมน์รูปภาพ (Picture): รูปภาพขนาด 28x28 พิกเซลของตัวเลข 0 ถึง 9 จำนวน
+        60,000 รูป
+      </li>
+      <li>คอลัมน์ป้ายกำกับ (Label): ตัวเลขที่ระบุว่าแต่ละรูปภาพคือเลขอะไร</li>
     </ul>
     <div class="box mb-4">
       <p>แสดงจำนวนของแต่ละตัวเลขใน dataset:</p>
@@ -38,42 +41,145 @@
         </tbody>
       </table>
     </div>
-    <p><strong>ความไม่สมบูรณ์ของ dataset:</strong></p>
+    <p>
+      <strong>การเตรียมข้อมูล:</strong> เนื่องจากรูปภาพไม่สามารถใช้กับแบบจำลอง
+      CNN ได้โดยตรง จึงต้องลดค่าสีของแต่ละพิกเซลให้อยู่ในช่วง 0-1 โดยการหารด้วย
+      255.0 จากนั้นใช้อัลกอริทึม Convolution เพื่อดึงคุณสมบัติ (feature)
+      จากแต่ละพิกเซลสำหรับใช้ในแบบจำลอง CNN ต่อไป
+    </p>
+  </section>
+
+  <section class="mb-4">
+    <h2>2. การแบ่งข้อมูล</h2>
+    <p>แบ่งข้อมูลเป็น 2 ส่วน:</p>
+    <ul>
+      <li>ข้อมูลฝึก (Train): 100%</li>
+      <li>ข้อมูลทดสอบ (Test): 10%</li>
+    </ul>
+    <p>
+      ใช้ฟังก์ชัน <code>mnist.load_data()</code> เพื่อแบ่งข้อมูล (X_train,
+      y_train), (X_test, y_test)
+    </p>
+  </section>
+
+  <section class="mb-4">
+    <h2>3. การเลือกแบบจำลอง (Model)</h2>
+    <p>
+      เลือกใช้แบบจำลอง CNN (Convolutional Neural Network)
+      เนื่องจากเหมาะสมกับการจำแนกประเภทข้อมูลรูปภาพ
+    </p>
+    <p><strong>ค่าความแม่นยำ (Accuracy) ที่ได้:</strong> 99.33%</p>
+    <div class="box">
+      <h2>กราฟ Accuracy และ Loss ของ Model</h2>
+      <img
+        src="data:image/png;base64,{{ accuracy_loss_plot }}"
+        alt="Accuracy and Loss Graph"
+      />
+    </div>
+    <p><strong>เหตุผลที่เลือก CNN:</strong></p>
     <ul>
       <li>
-        รูปภาพต้องถูกแปลงโดยการลดค่าสีในแต่ละพิกเซลลงในช่วง 0-1 โดยหารด้วย 255.0
+        การดึงคุณสมบัติจากภาพ (Feature Extraction): CNN
+        สามารถเรียนรู้และดึงคุณสมบัติจากภาพได้โดยอัตโนมัติ
       </li>
-      <li>ใช้ Convolutional Neural Network (CNN) เพื่อดึงคุณลักษณะจากรูปภาพ</li>
+      <li>
+        การจัดการข้อมูลที่มีความสัมพันธ์ทางพื้นที่ (Spatial Hierarchy): CNN
+        สามารถจับลักษณะต่างๆ ของภาพ เช่น ขอบหรือรูปทรง
+        ที่มีความสัมพันธ์กันในพื้นที่ต่างๆ ของภาพ
+      </li>
+      <li>
+        การลดจำนวนพารามิเตอร์ (Parameter Reduction): CNN ใช้ shared weights
+        ในการทำ convolution ซึ่งช่วยลดจำนวนพารามิเตอร์ที่ต้องเรียนรู้
+      </li>
+      <li>
+        ประสิทธิภาพในงานที่เกี่ยวข้องกับภาพ: CNN
+        ได้รับการพิสูจน์แล้วว่าเป็นแบบจำลองที่ดีที่สุดสำหรับการจำแนกรูปภาพ
+      </li>
+      <li>
+        การขยายตัว (Scalability): CNN สามารถปรับตัวได้ดีเมื่อข้อมูลเพิ่มขึ้น
+      </li>
     </ul>
-  </div>
+  </section>
 
-  <div class="box">
-    <h2>2. การแบ่งข้อมูล</h2>
-    <p>ใช้ <code>mnist.load_data()</code> เพื่อแบ่งข้อมูลเป็น:</p>
+  <section class="mb-4">
+    <h2>4. การออกแบบแบบจำลอง</h2>
     <ul>
-      <li>ชุดข้อมูล Train = 60,000 รูปภาพ</li>
-      <li>ชุดข้อมูล Test = 10,000 รูปภาพ</li>
+      <li>
+        <strong>4.1 Sequential:</strong> ใช้สร้างแบบจำลองแบบ linear stack
+        ของเลเยอร์ที่เชื่อมต่อกันตามลำดับ
+        <ul>
+          <li>
+            ข้อดี: สร้างแบบจำลองได้ง่าย
+            เหมาะกับแบบจำลองที่ไม่มีการแบ่งสาขาหรือการเชื่อมโยงแบบข้ามกัน
+          </li>
+        </ul>
+      </li>
+      <li>
+        <strong>4.2 Conv2D:</strong> 2D Convolutional Layer
+        ใช้ดึงคุณสมบัติจากภาพ
+        <ul>
+          <li>
+            ข้อดี: ดึงคุณสมบัติจากภาพ เรียนรู้ลักษณะเชิงพื้นที่
+            ลดจำนวนพารามิเตอร์
+          </li>
+          <li>ใช้ padding เพื่อรักษาขนาดของภาพหลังจากการประมวลผล</li>
+        </ul>
+      </li>
+      <li>
+        <strong>4.3 MaxPooling2D:</strong> ลดขนาดของ feature maps
+        โดยเลือกค่าสูงสุดจากพื้นที่เล็กๆ
+        <ul>
+          <li>ข้อดี: ลดขนาดข้อมูล ลดการ overfitting รักษาคุณสมบัติที่สำคัญ</li>
+        </ul>
+      </li>
+      <li>
+        <strong>4.4 Dropout:</strong> สุ่มปิดการทำงานของบาง neuron
+        เพื่อป้องกันการ Overfitting
+      </li>
+      <li>
+        <strong>4.5 Flatten Layer:</strong> แปลงข้อมูลจากหลายมิติเป็นเวกเตอร์ 1D
+        สำหรับป้อนเข้า Dense Layer
+      </li>
+      <li>
+        <strong>4.6 Fully Connected (Dense Layer):</strong>
+        รวมข้อมูลจากเลเยอร์ก่อนหน้าและประมวลผลให้ได้ผลลัพธ์สุดท้าย ใช้ฟังก์ชัน
+        activation คือ Tanh
+      </li>
     </ul>
-  </div>
+  </section>
 
-  <div class="box">
-    <h2>3. ผลการทดสอบโมเดล</h2>
-    <p><strong>โมเดลที่ใช้:</strong> Convolutional Neural Network (CNN)</p>
-    <p><strong>Accuracy:</strong> 99.33%</p>
-  </div>
-  <div class="box">
-    <h2>กราฟ Accuracy และ Loss</h2>
-    <img
-      src="data:image/png;base64,{{ accuracy_loss_plot }}"
-      alt="Accuracy and Loss Graph"
-    />
-  </div>
-  <div class="box">
-    <h2>4. การบันทึกโมเดล</h2>
+  <section class="mb-4">
+    <h2>5. ทฤษฎีของอัลกอริทึม</h2>
+    <ul>
+      <li>Convolutional Layer: ดึงคุณลักษณะจากภาพโดยใช้ฟิลเตอร์</li>
+      <li>Activation Function (ReLU): เพิ่มความไม่เป็นเชิงเส้นให้โมเดล</li>
+      <li>Pooling Layer: ลดขนาดของข้อมูลโดยเลือกค่าสูงสุด</li>
+      <li>Dropout Layer: ป้องกันการ Overfitting โดยสุ่มปิดนิวรอน</li>
+      <li>Flatten Layer: เปลี่ยนข้อมูลเป็นรูปแบบ 1D</li>
+      <li>
+        Fully Connected Layer (Dense Layer): เชื่อมโยงนิวรอนทั้งหมด ใช้ Softmax
+        เพื่อให้ผลลัพธ์เป็นความน่าจะเป็น
+      </li>
+      <li>
+        Loss Function (sparse_categorical_crossentropy):
+        วัดความแตกต่างระหว่างค่าที่คาดการณ์และค่าจริง
+      </li>
+      <li>Optimizer (Adam): ปรับค่าพารามิเตอร์ให้เหมาะสม</li>
+      <li>Early Stopping: หยุดการฝึกเมื่อไม่เห็นการปรับปรุง</li>
+      <li>Training Process: ฝึกโมเดลโดยใช้ข้อมูลฝึกและข้อมูลตรวจสอบ</li>
+    </ul>
+  </section>
+
+  <section class="mb-4">
+    <h2>6. การบันทึกผลการฝึกแบบจำลอง</h2>
     <p>
-      โมเดลถูกบันทึกในไฟล์ <code>.h5</code> โดยใช้ <code>model.save()</code> ของ
-      Keras เพื่อให้โหลดกลับมาใช้ได้ในอนาคต
+      ใช้ <code>model.save()</code> เพื่อบันทึก architecture, weights, และ
+      optimizer state ลงในไฟล์ .h5
     </p>
-  </div>
+  </section>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {% endblock %}

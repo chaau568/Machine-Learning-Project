@@ -1,5 +1,5 @@
 # เลือก base image ของ Python
-FROM python:3.10
+FROM python:3.12
 
 # สร้าง directory สำหรับงานใน container
 WORKDIR /app

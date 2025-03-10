@@ -1,24 +1,26 @@
 {% extends "base.html" %} {% block title %}
 <title>Emotion Details</title>
 {% endblock %} {% block content %}
-<div class="container">
-  <h1>Emotion Classification Model</h1>
+<div class="container mt-5">
+  <h1 class="text-center mb-4">
+    แบบจำลองการจำแนกอารมณ์ (Emotion Classification Model)
+  </h1>
 
-  <div class="box">
-    <h2>1. Dataset</h2>
+  <section class="mb-4">
+    <h2>1. ข้อมูลชุด (Dataset)</h2>
     <p>
-      <strong>แหล่งข้อมูล:</strong>
+      <strong>แหล่งที่มาของข้อมูล:</strong>
       <a
         href="https://github.com/sakshisphatak/Text-Emotion-Detection/tree/main/Text%20Emotion%20Detection/data"
         target="_blank"
-        >GitHub Dataset</a
+        >GitHub</a
       >
     </p>
-    <p><strong>โครงสร้างของ dataset:</strong></p>
-    <ul>
-      <li>Emotion column - ระบุอารมณ์ของแต่ละข้อความ</li>
-      <li>Text column - ข้อความที่แสดงถึงอารมณ์</li>
-    </ul>
+    <p>
+      <strong>คำอธิบายชุดข้อมูล:</strong> ชุดข้อมูลนี้ประกอบด้วย 2 คอลัมน์
+      ได้แก่ คอลัมน์ "Emotion" ซึ่งระบุอารมณ์ และคอลัมน์ "Text"
+      ซึ่งเป็นข้อความที่แสดงถึงอารมณ์นั้น ๆ
+    </p>
     <div class="box mb-4">
       <p>แสดงจำนวนของแต่ละอารมณ์ใน dataset:</p>
       <table class="table table-bordered table-striped">
@@ -38,59 +40,114 @@
         </tbody>
       </table>
     </div>
-    <p><strong>ความไม่สมบูรณ์ของ dataset:</strong></p>
-    <ul>
-      <li>
-        ข้อความมีสัญลักษณ์พิเศษและอีโมจิ ซึ่งต้องทำความสะอาด (text cleaning)
-      </li>
-      <li>ใช้ <code>neattext</code> ใน Python เพื่อช่วยล้างข้อมูล</li>
-      <li>
-        ใช้ <code>CountVectorizer</code> จาก
-        <code>scikit-learn</code> แปลงข้อความเป็น Bag of Words (BoW)
-      </li>
-    </ul>
-  </div>
-
-  <div class="box">
-    <h2>2. การแบ่งข้อมูล</h2>
     <p>
-      ใช้ <code>train_test_split</code> จาก
-      <code>scikit-learn</code> แบ่งข้อมูลเป็น:
+      <strong>ความไม่สมบูรณ์ของข้อมูล:</strong> ข้อความในชุดข้อมูลมีสิ่งรบกวน
+      ทำให้ไม่สามารถนำไปใช้กับแบบจำลองได้โดยตรง จึงต้องทำความสะอาดข้อความก่อน
+      โดยใช้ไลบรารี neattext ของ Python เพื่อลบอักขระพิเศษ อีโมจิ ตัวเลข
+      และจัดการข้อความซ้ำซ้อน จากนั้นใช้ CountVectorizer จากไลบรารี scikit-learn
+      เพื่อแปลงข้อความเป็นเวกเตอร์ความถี่ของคำ (Bag of Words)
+      เพื่อให้แบบจำลองสามารถเข้าใจได้
     </p>
-    <ul>
-      <li>ชุดข้อมูล Train = 70%</li>
-      <li>ชุดข้อมูล Test = 30%</li>
-    </ul>
-  </div>
+  </section>
 
-  <div class="box">
-    <h2>3. ผลการทดสอบโมเดล</h2>
+  <section class="mb-4">
+    <h2>2. การแบ่งข้อมูล</h2>
+    <p>ใช้ฟังก์ชัน train_test_split จากไลบรารี scikit-learn ในการแบ่งข้อมูล</p>
     <ul>
-      <li>LogisticRegression: Accuracy = 63.23%</li>
-      <li>SVC (Support Vector Classification): Accuracy = 63.77%</li>
-      <li>RandomForestClassifier: Accuracy = 55.40%</li>
-      {{ details.model_accuracy }}
+      <li>ข้อมูลสำหรับฝึก (Train): 70%</li>
+      <li>ข้อมูลสำหรับทดสอบ (Test): 30%</li>
+    </ul>
+  </section>
+
+  <section class="mb-4">
+    <h2>3. การเลือกแบบจำลอง (Model)</h2>
+    <p>ทดลองใช้หลายแบบจำลองและเปรียบเทียบค่าความแม่นยำ (Accuracy):</p>
+    <ul>
+      <li>Logistic Regression: 63.23%</li>
+      <li>Support Vector Classification (SVC): 63.75%</li>
+      <li>RandomForestClassifier: 55.40%</li>
     </ul>
     <div class="box">
-      <h2>กราฟ Accuracy และ Loss</h2>
+      <h2>กราฟ Accuracy และ Loss ของแต่ละ Model</h2>
       <img
         src="data:image/png;base64,{{ model_accuracy }}"
         alt="Accuracy and Loss Graph"
       />
     </div>
     <p>
-      <strong>สรุป:</strong> SVC และ LogisticRegression
-      มีประสิทธิภาพใกล้เคียงกัน แต่ SVC ใช้ทรัพยากรมากกว่า จึงเลือก
-      LogisticRegression
+      เลือกใช้ Logistic Regression เนื่องจากให้ค่าความแม่นยำใกล้เคียงกับ SVC
+      แต่ใช้ทรัพยากรในการฝึกน้อยกว่า
     </p>
-  </div>
+  </section>
 
-  <div class="box">
-    <h2>4. การบันทึกโมเดล</h2>
+  <section class="mb-4">
+    <h2>4. การออกแบบแบบจำลอง</h2>
+    <h3>4.1 CountVectorizer</h3>
     <p>
-      โมเดลถูกบันทึกในไฟล์ <code>.pkl</code> โดยใช้ <code>pickle</code> ของ
-      Python เพื่อให้โหลดกลับมาใช้ได้ในอนาคต
+      เครื่องมือสำหรับแปลงข้อความเป็นเวกเตอร์ของตัวเลข
+      โดยนับจำนวนการปรากฏของคำในแต่ละข้อความ
     </p>
-  </div>
+    <ul>
+      <li>สร้างคำศัพท์ (Vocabulary) และแปลงข้อความเป็นเวกเตอร์ความถี่ของคำ</li>
+      <li>
+        ใช้ในการแปลงข้อมูลข้อความให้เป็นรูปแบบที่แบบจำลอง Machine Learning
+        สามารถประมวลผลได้
+      </li>
+      <li>
+        ตัวอย่างการใช้งาน: แปลงข้อความ "I am happy today" เป็นเวกเตอร์ [1, 1, 1,
+        1]
+      </li>
+    </ul>
+    <h3>4.2 Pipeline</h3>
+    <p>
+      กระบวนการที่รวมขั้นตอนการเตรียมข้อมูล การฝึกแบบจำลอง การทำนาย
+      และการประเมินผลไว้ในขั้นตอนเดียว
+    </p>
+    <ul>
+      <li>
+        ช่วยให้การทำงานมีประสิทธิภาพ ลดความยุ่งยาก และจัดการขั้นตอนต่าง ๆ
+        ได้ง่ายขึ้น
+      </li>
+      <li>
+        รองรับการทำงานแบบอัตโนมัติ การทำ Cross-Validation และการปรับแต่ง
+        Hyperparameters
+      </li>
+    </ul>
+  </section>
+
+  <section class="mb-4">
+    <h2>5. ทฤษฎีของอัลกอริทึม Logistic Regression</h2>
+    <p>
+      อัลกอริทึมสำหรับการจำแนกประเภท
+      โดยเฉพาะปัญหาที่มีผลลัพธ์เป็นค่าไม่ต่อเนื่อง
+    </p>
+    <h3>5.1 Softmax Function</h3>
+    <p>
+      แปลงค่า logits เป็นค่าความน่าจะเป็นของแต่ละคลาส
+      ทำให้ผลรวมของค่าความน่าจะเป็นทุกคลาสเป็น 1
+    </p>
+    <h3>5.2 Loss Function</h3>
+    <p>
+      วัดความแตกต่างระหว่างค่าที่คาดการณ์และค่าจริง
+      ใช้ในการปรับพารามิเตอร์ของแบบจำลองให้มีค่าความแม่นยำสูงขึ้น
+    </p>
+    <h3>5.3 Gradient Descent</h3>
+    <p>
+      อัลกอริทึมสำหรับหาค่าพารามิเตอร์ที่เหมาะสมที่สุด
+      โดยการปรับค่าพารามิเตอร์ในทิศทางที่ลดค่า Loss Function
+    </p>
+  </section>
+
+  <section class="mb-4">
+    <h2>6. การบันทึกผลการฝึกแบบจำลอง</h2>
+    <p>ใช้ไลบรารี pickle ในการบันทึกข้อมูลการฝึกเป็นไฟล์ .pkl</p>
+    <p>
+      ไฟล์ .pkl ช่วยให้สามารถโหลดและใช้งานแบบจำลองได้โดยไม่ต้องฝึกใหม่ทุกครั้ง
+    </p>
+  </section>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {% endblock %}
