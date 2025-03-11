@@ -27,7 +27,6 @@
           <tr>
             <th>Class</th>
             <th>Train Class Count</th>
-            <th>Test Class Count</th>
           </tr>
         </thead>
         <tbody>
@@ -35,7 +34,6 @@
           <tr>
             <td>{{ detail.Class }}</td>
             <td>{{ detail.Train }}</td>
-            <td>{{ detail.Test }}</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -105,45 +103,94 @@
     <h2>4. การออกแบบแบบจำลอง</h2>
     <ul>
       <li>
-        <strong>4.1 Sequential:</strong> ใช้สร้างแบบจำลองแบบ linear stack
-        ของเลเยอร์ที่เชื่อมต่อกันตามลำดับ
+        <strong>Sequential:</strong> เป็นคลาสที่ใช้ในการสร้างโมเดลแบบ linear
+        stack ของเลเยอร์ (layers) <br />
+        ที่แต่ละเลเยอร์มีการเชื่อมโยงกันแบบต่อเนื่อง (sequential). การใช้
+        Sequential <br />
+        จะช่วยให้การสร้างโมเดลเป็นไปอย่างง่ายและตรงไปตรงมา
+        เมื่อโมเดลมีโครงสร้างที่เป็นลำดับขั้น
+        <p>การใช้ Sequential มีประโยชน์อย่างไร</p>
         <ul>
           <li>
-            ข้อดี: สร้างแบบจำลองได้ง่าย
-            เหมาะกับแบบจำลองที่ไม่มีการแบ่งสาขาหรือการเชื่อมโยงแบบข้ามกัน
+            เมื่อโมเดลมีการเชื่อมต่อระหว่างเลเยอร์ตามลำดับ (จาก input ไป output)
+            <br />การใช้ Sequential จะช่วยให้การเขียนโค้ดง่ายขึ้นและเข้าใจง่าย
           </li>
+          <li>สามารถเพิ่มเลเยอร์ลงไปทีละตัวในลำดับที่ต้องการได้อย่างสะดวก</li>
         </ul>
       </li>
       <li>
-        <strong>4.2 Conv2D:</strong> 2D Convolutional Layer
-        ใช้ดึงคุณสมบัติจากภาพ
+        <strong>Conv2D:</strong> 2D Convolutional Layer ในโมเดล Convolutional
+        Neural Network (CNN) <br />
+        ซึ่งใช้สำหรับการประมวลผลข้อมูลภาพ (หรือข้อมูลที่มีมิติ 2D เช่น
+        ภาพสีที่มีช่องสัญญาณ RGB) <br />
+        เพื่อดึงคุณสมบัติหรือฟีเจอร์จากภาพโดยอัตโนมัติ
+        <p>การใช้ Conv2D มีประโยชน์อย่างไร</p>
         <ul>
           <li>
-            ข้อดี: ดึงคุณสมบัติจากภาพ เรียนรู้ลักษณะเชิงพื้นที่
-            ลดจำนวนพารามิเตอร์
+            ดึงคุณสมบัติจากภาพ: Conv2D จะใช้ฟิลเตอร์ (หรือเคอร์เนล)
+            ที่มีขนาดเล็ก เช่น 3x3 หรือ 5x5 <br />
+            เพื่อสแกนหรือ "กลิ้ง" ผ่านภาพและจับลักษณะต่างๆ ของภาพ เช่น ขอบ
+            (edges), รูปร่าง (shapes), <br />
+            หรือพื้นผิว (textures) ซึ่งมีความสำคัญในการแยกแยะตัวเลข
           </li>
-          <li>ใช้ padding เพื่อรักษาขนาดของภาพหลังจากการประมวลผล</li>
+          <li>
+            เรียนรู้ลักษณะเชิงพื้นที่: Conv2D
+            ช่วยให้โมเดลสามารถจับลักษณะหรือฟีเจอร์ต่างๆ
+            ที่มีความสัมพันธ์กันในพื้นที่ <br />
+            เช่น ขอบที่เกิดขึ้นจากเส้นตรงในตัวเลข
+            ซึ่งมีความสัมพันธ์กันในพื้นที่ของภาพ
+          </li>
+          <li>
+            ลดจำนวนพารามิเตอร์: การใช้ Conv2D
+            ช่วยลดจำนวนพารามิเตอร์ที่ต้องเรียนรู้ <br />
+            เพราะมันใช้ฟิลเตอร์ร่วมกันในการประมวลผลพื้นที่ทั้งหมดของภาพ
+            ซึ่งแตกต่างจาก <br />
+            Fully Connected Layers
+            ที่ต้องเรียนรู้พารามิเตอร์สำหรับทุกพิกเซลของภาพ
+          </li>
         </ul>
+        <p>
+          <br />
+          และใช้ <strong>padding</strong> ใน Conv2D
+          เพื่อให้ขนาดของข้อมูลออกจากการทำ convolution (แผนที่คุณสมบัติหรือ
+          feature map) <br />
+          มีขนาดเท่ากับขนาดของข้อมูลที่ป้อนเข้าโมเดล
+          หรือกล่าวอีกนัยหนึ่งก็คือการรักษาขนาดของภาพหลังจากการประมวลผลด้วย
+          <br />
+          convolution ให้อยู่ในขนาดเดียวกับภาพต้นฉบับ (หรือใกล้เคียง)
+        </p>
       </li>
       <li>
-        <strong>4.3 MaxPooling2D:</strong> ลดขนาดของ feature maps
-        โดยเลือกค่าสูงสุดจากพื้นที่เล็กๆ
+        <strong>MaxPooling2D:</strong> การทำ pooling
+        ชนิดหนึ่งที่ใช้การเลือกค่าที่มีค่าสูงสุดจากพื้นที่เล็กๆ (sub-regions)
+        <br />
+        ในภาพเพื่อสร้าง feature map ใหม่ที่มีขนาดเล็กลง
+        <p>การทำงานของ MaxPooling2D</p>
         <ul>
-          <li>ข้อดี: ลดขนาดข้อมูล ลดการ overfitting รักษาคุณสมบัติที่สำคัญ</li>
+          <li>แบ่งภาพ เป็นพื้นที่ย่อยๆ เลือกค่ามากที่สุด</li>
+          <li>จากแต่ละกริดย่อยในแต่ละพื้นที่. สร้าง ผลลัพธ์ใหม่</li>
+          <li>โดยใช้ค่าสูงสุดที่เลือกจากแต่ละกริดย่อยแทน</li>
         </ul>
+        <p>
+          MaxPooling2D ใช้ใน CNN เพื่อ ลดขนาดของ feature maps หลังจากทำ
+          convolution โดยเลือกค่าสูงสุดจากกริดย่อยๆ <br />
+          ซึ่งช่วยให้โมเดลสามารถทำงานได้เร็วขึ้น, ลดการ overfitting,
+          และยังคงรักษาคุณสมบัติที่สำคัญจากภาพที่ใช้ในการจำแนก
+        </p>
       </li>
       <li>
-        <strong>4.4 Dropout:</strong> สุ่มปิดการทำงานของบาง neuron
-        เพื่อป้องกันการ Overfitting
+        <strong>Dropout:</strong> สุ่มปิดการทำงานของบาง neuron เพื่อป้องกันการ
+        Overfitting
       </li>
       <li>
-        <strong>4.5 Flatten Layer:</strong> แปลงข้อมูลจากหลายมิติเป็นเวกเตอร์ 1D
+        <strong>Flatten Layer:</strong> แปลงข้อมูลจากหลายมิติเป็นเวกเตอร์ 1D
         สำหรับป้อนเข้า Dense Layer
       </li>
       <li>
-        <strong>4.6 Fully Connected (Dense Layer):</strong>
-        รวมข้อมูลจากเลเยอร์ก่อนหน้าและประมวลผลให้ได้ผลลัพธ์สุดท้าย ใช้ฟังก์ชัน
-        activation คือ Tanh
+        <strong>Fully Connected (Dense Layer):</strong>
+        รวมข้อมูลจากเลเยอร์ก่อนหน้าและประมวลผลให้ได้ผลลัพธ์สุดท้าย <br />
+        ใช้ฟังก์ชัน activation คือ Tanh (Hyperbolic Tangent) ซึ่งให้ค่า output
+        ระหว่าง -1 และ 1
       </li>
     </ul>
   </section>
@@ -151,22 +198,114 @@
   <section class="mb-4">
     <h2>5. ทฤษฎีของอัลกอริทึม</h2>
     <ul>
-      <li>Convolutional Layer: ดึงคุณลักษณะจากภาพโดยใช้ฟิลเตอร์</li>
-      <li>Activation Function (ReLU): เพิ่มความไม่เป็นเชิงเส้นให้โมเดล</li>
-      <li>Pooling Layer: ลดขนาดของข้อมูลโดยเลือกค่าสูงสุด</li>
-      <li>Dropout Layer: ป้องกันการ Overfitting โดยสุ่มปิดนิวรอน</li>
-      <li>Flatten Layer: เปลี่ยนข้อมูลเป็นรูปแบบ 1D</li>
       <li>
-        Fully Connected Layer (Dense Layer): เชื่อมโยงนิวรอนทั้งหมด ใช้ Softmax
-        เพื่อให้ผลลัพธ์เป็นความน่าจะเป็น
+        <strong>Convolutional Layer:</strong> ดึงคุณลักษณะจากภาพโดยใช้ฟิลเตอร์
       </li>
       <li>
-        Loss Function (sparse_categorical_crossentropy):
+        <strong>Activation Function (ReLU):</strong>
+        เพิ่มความไม่เป็นเชิงเส้นให้โมเดล
+        <p>
+          ReLU (Rectified Linear Unit) เป็นฟังก์ชันกระตุ้น (Activation Function)
+          ที่ใช้กันอย่างแพร่หลายใน Neural Networks <br />
+          โดยเฉพาะใน Deep Learning เนื่องจากช่วยแก้ปัญหาการลดทอนของ Gradient
+          (Vanishing Gradient Problem) <br />
+          และทำให้โมเดลเรียนรู้ได้เร็วขึ้น
+        </p>
+      </li>
+      <li><strong>Pooling Layer:</strong> ลดขนาดของข้อมูลโดยเลือกค่าสูงสุด</li>
+      <li>
+        <strong>Dropout Layer:</strong> ป้องกันการ Overfitting โดยทำงานเป็น
+        Regularization Method ในการฝึกโมเดล
+        <p>การทำงานของ Dropout Layer</p>
+        <ul>
+          <li>
+            ในแต่ละ Epoch (รอบของการฝึกโมเดล) Dropout จะทำงานเฉพาะช่วง Training
+            Phase เท่านั้น
+          </li>
+          <li>
+            Dropout จะสุ่มเลือก Neuron ใน Layer นั้นๆ ให้มีค่าเป็นศูนย์
+            (ปิดการทำงานชั่วคราว)
+          </li>
+          <li>
+            อัตราการปิด Neuron กำหนดโดย Dropout Rate (p) โดยใน model ของผมใช้
+            <br />
+            0.1 หมายถึงปิด Neuron 10% และให้ Neuron 90% ที่เหลือทำงานปกติ
+          </li>
+        </ul>
+        <p>ข้อดีของ Dropout</p>
+        <ul>
+          <li>
+            ลดการ Overfitting ทำให้โมเดลไม่เรียนรู้แค่ข้อมูล Training มากเกินไป
+          </li>
+          <li>เพิ่มความสามารถในการ Generalization ของโมเดล</li>
+          <li>
+            สามารถใช้ได้ง่ายและสามารถปรับค่า Dropout Rate ได้ตามความเหมาะสม
+          </li>
+        </ul>
+      </li>
+      <li>
+        <strong>Flatten Layer:</strong> เปลี่ยนข้อมูลเป็นรูปแบบ 1D
+        <p>
+          ในโมเดล CNN ข้อมูลอินพุตจะเป็นรูปภาพที่มีโครงสร้าง 3 มิติ คือ (สูง,
+          กว้าง, ช่องสี) = (28, 28, 1) <br />
+          หลังจากผ่าน Convolutional และ Pooling Layers ไปแล้ว
+          ข้อมูลยังคงเป็นหลายมิติ (Feature Map) <br />
+          ซึ่งไม่สามารถป้อนเข้า Dense Layer ได้โดยตรง Flatten Layer
+          จะทำหน้าที่แปลง Feature Map ที่มีหลายมิติให้กลายเป็น 1 มิติ <br />
+          เพื่อเชื่อมต่อกับ Dense Layer ที่ทำหน้าที่ในการจำแนกประเภท
+          (classification)
+        </p>
+      </li>
+      <li>
+        <strong>Fully Connected Layer (Dense Layer):</strong>
+        เชื่อมโยงนิวรอนทั้งหมด ใช้ Softmax เพื่อให้ผลลัพธ์เป็นความน่าจะเป็น
+      </li>
+      <li>
+        <strong>Loss Function (sparse_categorical_crossentropy):</strong>
         วัดความแตกต่างระหว่างค่าที่คาดการณ์และค่าจริง
+        <ul>
+          <li>ถ้าค่าทำนายใกล้เคียงกับค่าจริง Loss จะน้อย</li>
+          <li>ถ้าค่าทำนายต่างจากค่าจริงมาก Loss จะมาก</li>
+        </ul>
       </li>
-      <li>Optimizer (Adam): ปรับค่าพารามิเตอร์ให้เหมาะสม</li>
-      <li>Early Stopping: หยุดการฝึกเมื่อไม่เห็นการปรับปรุง</li>
-      <li>Training Process: ฝึกโมเดลโดยใช้ข้อมูลฝึกและข้อมูลตรวจสอบ</li>
+      <li>
+        <strong>Optimizer (Adam):</strong> ปรับค่าพารามิเตอร์ให้เหมาะสม
+        <p>
+          Adam (Adaptive Moment Estimation) เป็นหนึ่งใน Optimization Algorithm
+          ที่นิยมใช้ในการฝึก Neural Networks <br />
+          โดยเป็นการพัฒนาต่อจาก SGD (Stochastic Gradient Descent)
+          ซึ่งรวมข้อดีของ Momentum และ RMSProp <br />
+          ทำให้สามารถเรียนรู้ได้เร็วและมีเสถียรภาพมากขึ้น
+        </p>
+        <p>
+          Adam ทำงานอย่างไร <br />
+          Adam ปรับค่า weights (W) ของ Neural Network โดยใช้ Gradient Descent
+          แต่เพิ่ม 2 เทคนิคหลักคือ
+        </p>
+        <ul>
+          <li>
+            Momentum (Moment 1st - Moving Average of Gradients)
+            ช่วยให้การอัปเดตค่าถ่วงน้ำหนักไม่แกว่งไปมาเกินไป <br />
+            โดยคำนวณค่าเฉลี่ยเคลื่อนที่ของ Gradient
+          </li>
+          <li>
+            RMSProp (Moment 2nd - Adaptive Learning Rate)
+            ช่วยลดปัญหาการอัปเดตเร็วเกินไป <br />
+            โดยคำนวณค่าเฉลี่ยกำลังสองของ Gradient
+          </li>
+        </ul>
+        <p>
+          การปรับค่าอัปเดต (Bias Correction & Update) Adam ใช้ค่าที่คำนวณได้จาก
+          Momentum หรือ RMSProp มาปรับค่า weights (W)
+        </p>
+      </li>
+      <li>
+        <strong>Early Stopping:</strong> หยุดการฝึกเมื่อไม่เห็นการปรับปรุง
+      </li>
+      <li>
+        <strong>Training Process:</strong>
+        ฝึกโมเดลโดยใช้ข้อมูลฝึกและข้อมูลตรวจสอบ
+      </li>
     </ul>
   </section>
 
@@ -174,7 +313,11 @@
     <h2>6. การบันทึกผลการฝึกแบบจำลอง</h2>
     <p>
       ใช้ <code>model.save()</code> เพื่อบันทึก architecture, weights, และ
-      optimizer state ลงในไฟล์ .h5
+      optimizer state ลงในไฟล์ .h5 <br />
+      .h5 ซึ่งเป็นรูปแบบไฟล์ที่ใช้สำหรับเก็บโมเดล Keras และ TensorFlow
+      ได้รับความนิยมมากในการจัดเก็บโมเดล <br />
+      ที่ฝึกเสร็จแล้วเพื่อให้สามารถนำกลับมาใช้ในอนาคตได้
+      โดยไม่จำเป็นต้องฝึกโมเดลใหม่ทุกครั้ง
     </p>
   </section>
 </div>
