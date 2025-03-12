@@ -1,12 +1,27 @@
 {% extends "base.html" %} {% block title %}
 <title>Digit Classification Model</title>
+<style>
+  .container {
+    max-width: 100%;
+    padding: 20px;
+  }
+  .section {
+    max-width: 100%;
+  }
+  .responsive-img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+</style>
 {% endblock %} {% block content %}
 <div class="container mt-5">
   <h1 class="text-center mb-4">
     แบบจำลองการจำแนกตัวเลข (Digit Classification Model)
   </h1>
 
-  <section class="mb-4">
+  <section class="section mb-4">
     <h2>1. ชุดข้อมูล (Dataset)</h2>
     <p>
       <strong>แหล่งที่มา:</strong> MNIST (Modified National Institute of
@@ -47,12 +62,12 @@
     </p>
   </section>
 
-  <section class="mb-4">
+  <section class="section mb-4">
     <h2>2. การแบ่งข้อมูล</h2>
     <p>แบ่งข้อมูลเป็น 2 ส่วน:</p>
     <ul>
-      <li>ข้อมูลฝึก (Train): 100%</li>
-      <li>ข้อมูลทดสอบ (Test): 10%</li>
+      <li><code>ข้อมูลฝึก (Train): 100%</code></li>
+      <li><code>ข้อมูลทดสอบ (Test): 10%</code></li>
     </ul>
     <p>
       ใช้ฟังก์ชัน <code>mnist.load_data()</code> เพื่อแบ่งข้อมูล (X_train,
@@ -60,18 +75,19 @@
     </p>
   </section>
 
-  <section class="mb-4">
+  <section class="section mb-4">
     <h2>3. การเลือกแบบจำลอง (Model)</h2>
     <p>
       เลือกใช้แบบจำลอง CNN (Convolutional Neural Network)
       เนื่องจากเหมาะสมกับการจำแนกประเภทข้อมูลรูปภาพ
     </p>
-    <p><strong>ค่าความแม่นยำ (Accuracy) ที่ได้:</strong> 99.33%</p>
+    <p><strong>ค่าความแม่นยำ (Accuracy) ที่ได้:</strong><code>99.33%</code></p>
     <div class="box">
       <h2>กราฟ Accuracy และ Loss ของ Model</h2>
       <img
         src="data:image/png;base64,{{ accuracy_loss_plot }}"
         alt="Accuracy and Loss Graph"
+        class="responsive-img"
       />
     </div>
     <p><strong>เหตุผลที่เลือก CNN:</strong></p>
@@ -99,7 +115,7 @@
     </ul>
   </section>
 
-  <section class="mb-4">
+  <section class="section mb-4">
     <h2>4. การออกแบบแบบจำลอง</h2>
     <ul>
       <li>
@@ -109,14 +125,13 @@
         Sequential <br />
         จะช่วยให้การสร้างโมเดลเป็นไปอย่างง่ายและตรงไปตรงมา
         เมื่อโมเดลมีโครงสร้างที่เป็นลำดับขั้น
-        <p>การใช้ Sequential มีประโยชน์อย่างไร</p>
-        <ul>
-          <li>
-            เมื่อโมเดลมีการเชื่อมต่อระหว่างเลเยอร์ตามลำดับ (จาก input ไป output)
-            <br />การใช้ Sequential จะช่วยให้การเขียนโค้ดง่ายขึ้นและเข้าใจง่าย
-          </li>
-          <li>สามารถเพิ่มเลเยอร์ลงไปทีละตัวในลำดับที่ต้องการได้อย่างสะดวก</li>
-        </ul>
+        <p>
+          <b>การใช้ Sequential มีประโยชน์อย่างไร</b> <br />
+          1.เมื่อโมเดลมีการเชื่อมต่อระหว่างเลเยอร์ตามลำดับ (จาก input ไป output)
+          <br />การใช้ Sequential จะช่วยให้การเขียนโค้ดง่ายขึ้นและเข้าใจง่าย
+          <br />
+          2.สามารถเพิ่มเลเยอร์ลงไปทีละตัวในลำดับที่ต้องการได้อย่างสะดวก
+        </p>
       </li>
       <li>
         <strong>Conv2D:</strong> 2D Convolutional Layer ในโมเดล Convolutional
@@ -124,32 +139,24 @@
         ซึ่งใช้สำหรับการประมวลผลข้อมูลภาพ (หรือข้อมูลที่มีมิติ 2D เช่น
         ภาพสีที่มีช่องสัญญาณ RGB) <br />
         เพื่อดึงคุณสมบัติหรือฟีเจอร์จากภาพโดยอัตโนมัติ
-        <p>การใช้ Conv2D มีประโยชน์อย่างไร</p>
-        <ul>
-          <li>
-            ดึงคุณสมบัติจากภาพ: Conv2D จะใช้ฟิลเตอร์ (หรือเคอร์เนล)
-            ที่มีขนาดเล็ก เช่น 3x3 หรือ 5x5 <br />
-            เพื่อสแกนหรือ "กลิ้ง" ผ่านภาพและจับลักษณะต่างๆ ของภาพ เช่น ขอบ
-            (edges), รูปร่าง (shapes), <br />
-            หรือพื้นผิว (textures) ซึ่งมีความสำคัญในการแยกแยะตัวเลข
-          </li>
-          <li>
-            เรียนรู้ลักษณะเชิงพื้นที่: Conv2D
-            ช่วยให้โมเดลสามารถจับลักษณะหรือฟีเจอร์ต่างๆ
-            ที่มีความสัมพันธ์กันในพื้นที่ <br />
-            เช่น ขอบที่เกิดขึ้นจากเส้นตรงในตัวเลข
-            ซึ่งมีความสัมพันธ์กันในพื้นที่ของภาพ
-          </li>
-          <li>
-            ลดจำนวนพารามิเตอร์: การใช้ Conv2D
-            ช่วยลดจำนวนพารามิเตอร์ที่ต้องเรียนรู้ <br />
-            เพราะมันใช้ฟิลเตอร์ร่วมกันในการประมวลผลพื้นที่ทั้งหมดของภาพ
-            ซึ่งแตกต่างจาก <br />
-            Fully Connected Layers
-            ที่ต้องเรียนรู้พารามิเตอร์สำหรับทุกพิกเซลของภาพ
-          </li>
-        </ul>
         <p>
+          <b>การใช้ Conv2D มีประโยชน์อย่างไร</b> <br />
+          1.ดึงคุณสมบัติจากภาพ: Conv2D จะใช้ฟิลเตอร์ (หรือเคอร์เนล)
+          ที่มีขนาดเล็ก เช่น 3x3 หรือ 5x5 <br />
+          เพื่อสแกนหรือ "กลิ้ง" ผ่านภาพและจับลักษณะต่างๆ ของภาพ เช่น ขอบ
+          (edges), รูปร่าง (shapes), <br />
+          หรือพื้นผิว (textures) ซึ่งมีความสำคัญในการแยกแยะตัวเลข <br />
+          2.เรียนรู้ลักษณะเชิงพื้นที่: Conv2D
+          ช่วยให้โมเดลสามารถจับลักษณะหรือฟีเจอร์ต่างๆ
+          ที่มีความสัมพันธ์กันในพื้นที่ <br />
+          เช่น ขอบที่เกิดขึ้นจากเส้นตรงในตัวเลข
+          ซึ่งมีความสัมพันธ์กันในพื้นที่ของภาพ <br />
+          3.ลดจำนวนพารามิเตอร์: การใช้ Conv2D
+          ช่วยลดจำนวนพารามิเตอร์ที่ต้องเรียนรู้ <br />
+          เพราะมันใช้ฟิลเตอร์ร่วมกันในการประมวลผลพื้นที่ทั้งหมดของภาพ
+          ซึ่งแตกต่างจาก <br />
+          Fully Connected Layers ที่ต้องเรียนรู้พารามิเตอร์สำหรับทุกพิกเซลของภาพ
+          <br />
           <br />
           และใช้ <strong>padding</strong> ใน Conv2D
           เพื่อให้ขนาดของข้อมูลออกจากการทำ convolution (แผนที่คุณสมบัติหรือ
@@ -165,12 +172,12 @@
         ชนิดหนึ่งที่ใช้การเลือกค่าที่มีค่าสูงสุดจากพื้นที่เล็กๆ (sub-regions)
         <br />
         ในภาพเพื่อสร้าง feature map ใหม่ที่มีขนาดเล็กลง
-        <p>การทำงานของ MaxPooling2D</p>
-        <ul>
-          <li>แบ่งภาพ เป็นพื้นที่ย่อยๆ เลือกค่ามากที่สุด</li>
-          <li>จากแต่ละกริดย่อยในแต่ละพื้นที่. สร้าง ผลลัพธ์ใหม่</li>
-          <li>โดยใช้ค่าสูงสุดที่เลือกจากแต่ละกริดย่อยแทน</li>
-        </ul>
+        <p>
+          <b>การทำงานของ MaxPooling2D</b> <br />
+          1.แบ่งภาพ เป็นพื้นที่ย่อยๆ เลือกค่ามากที่สุด <br />
+          2.จากแต่ละกริดย่อยในแต่ละพื้นที่. สร้าง ผลลัพธ์ใหม่ <br />
+          3.โดยใช้ค่าสูงสุดที่เลือกจากแต่ละกริดย่อยแทน
+        </p>
         <p>
           MaxPooling2D ใช้ใน CNN เพื่อ ลดขนาดของ feature maps หลังจากทำ
           convolution โดยเลือกค่าสูงสุดจากกริดย่อยๆ <br />
@@ -195,7 +202,7 @@
     </ul>
   </section>
 
-  <section class="mb-4">
+  <section class="section mb-4">
     <h2>5. ทฤษฎีของอัลกอริทึม</h2>
     <ul>
       <li>
@@ -216,32 +223,23 @@
       <li>
         <strong>Dropout Layer:</strong> ป้องกันการ Overfitting โดยทำงานเป็น
         Regularization Method ในการฝึกโมเดล
-        <p>การทำงานของ Dropout Layer</p>
-        <ul>
-          <li>
-            ในแต่ละ Epoch (รอบของการฝึกโมเดล) Dropout จะทำงานเฉพาะช่วง Training
-            Phase เท่านั้น
-          </li>
-          <li>
-            Dropout จะสุ่มเลือก Neuron ใน Layer นั้นๆ ให้มีค่าเป็นศูนย์
-            (ปิดการทำงานชั่วคราว)
-          </li>
-          <li>
-            อัตราการปิด Neuron กำหนดโดย Dropout Rate (p) โดยใน model ของผมใช้
-            <br />
-            0.1 หมายถึงปิด Neuron 10% และให้ Neuron 90% ที่เหลือทำงานปกติ
-          </li>
-        </ul>
-        <p>ข้อดีของ Dropout</p>
-        <ul>
-          <li>
-            ลดการ Overfitting ทำให้โมเดลไม่เรียนรู้แค่ข้อมูล Training มากเกินไป
-          </li>
-          <li>เพิ่มความสามารถในการ Generalization ของโมเดล</li>
-          <li>
-            สามารถใช้ได้ง่ายและสามารถปรับค่า Dropout Rate ได้ตามความเหมาะสม
-          </li>
-        </ul>
+        <p>
+          <b>การทำงานของ Dropout Layer</b> <br />
+          1.ในแต่ละ Epoch (รอบของการฝึกโมเดล) Dropout จะทำงานเฉพาะช่วง Training
+          Phase เท่านั้น <br />
+          2.Dropout จะสุ่มเลือก Neuron ใน Layer นั้นๆ ให้มีค่าเป็นศูนย์
+          (ปิดการทำงานชั่วคราว) <br />
+          3.อัตราการปิด Neuron กำหนดโดย Dropout Rate (p) โดยใน model ของผมใช้
+          <br />
+          0.1 หมายถึงปิด Neuron 10% และให้ Neuron 90% ที่เหลือทำงานปกติ
+        </p>
+        <p>
+          <b>ข้อดีของ Dropout</b> <br />
+          1.ลดการ Overfitting ทำให้โมเดลไม่เรียนรู้แค่ข้อมูล Training มากเกินไป
+          <br />
+          2.เพิ่มความสามารถในการ Generalization ของโมเดล <br />
+          3.สามารถใช้ได้ง่ายและสามารถปรับค่า Dropout Rate ได้ตามความเหมาะสม
+        </p>
       </li>
       <li>
         <strong>Flatten Layer:</strong> เปลี่ยนข้อมูลเป็นรูปแบบ 1D
@@ -261,39 +259,33 @@
         เชื่อมโยงนิวรอนทั้งหมด ใช้ Softmax เพื่อให้ผลลัพธ์เป็นความน่าจะเป็น
       </li>
       <li>
-        <strong>Loss Function (sparse_categorical_crossentropy):</strong>
-        วัดความแตกต่างระหว่างค่าที่คาดการณ์และค่าจริง
-        <ul>
-          <li>ถ้าค่าทำนายใกล้เคียงกับค่าจริง Loss จะน้อย</li>
-          <li>ถ้าค่าทำนายต่างจากค่าจริงมาก Loss จะมาก</li>
-        </ul>
+        <p>
+          <strong>Loss Function (sparse_categorical_crossentropy):</strong>
+          วัดความแตกต่างระหว่างค่าที่คาดการณ์และค่าจริง โดยที่ <br />
+          1.ถ้าค่าทำนายใกล้เคียงกับค่าจริง Loss จะน้อย <br />
+          2.ถ้าค่าทำนายต่างจากค่าจริงมาก Loss จะมาก
+        </p>
       </li>
       <li>
-        <strong>Optimizer (Adam):</strong> ปรับค่าพารามิเตอร์ให้เหมาะสม
         <p>
-          Adam (Adaptive Moment Estimation) เป็นหนึ่งใน Optimization Algorithm
+          <strong>Optimizer (Adam):</strong> ปรับค่าพารามิเตอร์ให้เหมาะสม Adam
+          (Adaptive Moment Estimation) เป็นหนึ่งใน Optimization Algorithm
           ที่นิยมใช้ในการฝึก Neural Networks <br />
           โดยเป็นการพัฒนาต่อจาก SGD (Stochastic Gradient Descent)
           ซึ่งรวมข้อดีของ Momentum และ RMSProp <br />
           ทำให้สามารถเรียนรู้ได้เร็วและมีเสถียรภาพมากขึ้น
         </p>
         <p>
-          Adam ทำงานอย่างไร <br />
+          <b>Adam ทำงานอย่างไร</b> <br />
           Adam ปรับค่า weights (W) ของ Neural Network โดยใช้ Gradient Descent
-          แต่เพิ่ม 2 เทคนิคหลักคือ
+          แต่เพิ่ม 2 เทคนิคหลักคือ <br />
+          1.Momentum (Moment 1st - Moving Average of Gradients)
+          ช่วยให้การอัปเดตค่าถ่วงน้ำหนักไม่แกว่งไปมาเกินไป <br />
+          โดยคำนวณค่าเฉลี่ยเคลื่อนที่ของ Gradient <br />
+          2.RMSProp (Moment 2nd - Adaptive Learning Rate)
+          ช่วยลดปัญหาการอัปเดตเร็วเกินไป <br />
+          โดยคำนวณค่าเฉลี่ยกำลังสองของ Gradient
         </p>
-        <ul>
-          <li>
-            Momentum (Moment 1st - Moving Average of Gradients)
-            ช่วยให้การอัปเดตค่าถ่วงน้ำหนักไม่แกว่งไปมาเกินไป <br />
-            โดยคำนวณค่าเฉลี่ยเคลื่อนที่ของ Gradient
-          </li>
-          <li>
-            RMSProp (Moment 2nd - Adaptive Learning Rate)
-            ช่วยลดปัญหาการอัปเดตเร็วเกินไป <br />
-            โดยคำนวณค่าเฉลี่ยกำลังสองของ Gradient
-          </li>
-        </ul>
         <p>
           การปรับค่าอัปเดต (Bias Correction & Update) Adam ใช้ค่าที่คำนวณได้จาก
           Momentum หรือ RMSProp มาปรับค่า weights (W)
@@ -309,7 +301,7 @@
     </ul>
   </section>
 
-  <section class="mb-4">
+  <section class="section mb-4">
     <h2>6. การบันทึกผลการฝึกแบบจำลอง</h2>
     <p>
       ใช้ <code>model.save()</code> เพื่อบันทึก architecture, weights, และ

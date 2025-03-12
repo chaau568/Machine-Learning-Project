@@ -1,10 +1,18 @@
 {% extends "base.html" %} {% block title %}
 <title>Number Classification Model</title>
 <style>
+  .container {
+    max-width: 100%;
+    padding: 20px;
+  }
   #canvas {
     border: 2px solid black;
     background-color: black;
     cursor: crosshair;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: auto;
   }
 </style>
 {% endblock %} {% block content %}
@@ -51,16 +59,71 @@
   const ctx = canvas.getContext("2d");
 
   let isDrawing = false;
+  let scale = 1;
 
-  canvas.addEventListener("mousedown", () => (isDrawing = true));
-  canvas.addEventListener("mouseup", () => (isDrawing = false));
-  canvas.addEventListener("mousemove", draw);
+  function resizeCanvas() {
+    const parentWidth = canvas.parentElement.clientWidth;
+    const newSize = Math.min(parentWidth, window.innerHeight * 0.7);
+    scale = newSize / 420;
+    canvas.width = newSize;
+    canvas.height = newSize;
+    clearCanvas();
+  }
+
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
+
+  function getMousePos(canvas, event) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: (event.clientX - rect.left) * (canvas.width / rect.width),
+      y: (event.clientY - rect.top) * (canvas.height / rect.height),
+    };
+  }
+
+  function getTouchPos(canvas, touchEvent) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x:
+        (touchEvent.touches[0].clientX - rect.left) *
+        (canvas.width / rect.width),
+      y:
+        (touchEvent.touches[0].clientY - rect.top) *
+        (canvas.height / rect.height),
+    };
+  }
+
+  function startDrawing(event) {
+    isDrawing = true;
+    event.preventDefault();
+  }
+
+  function stopDrawing() {
+    isDrawing = false;
+  }
 
   function draw(event) {
     if (!isDrawing) return;
+
+    let pos;
+    if (event.touches) {
+      event.preventDefault();
+      pos = getTouchPos(canvas, event);
+    } else {
+      pos = getMousePos(canvas, event);
+    }
+
     ctx.fillStyle = "white";
-    ctx.fillRect(event.offsetX, event.offsetY, 15, 15);
+    ctx.fillRect(pos.x, pos.y, 15, 15);
   }
+
+  canvas.addEventListener("mousedown", startDrawing);
+  canvas.addEventListener("mouseup", stopDrawing);
+  canvas.addEventListener("mousemove", draw);
+
+  canvas.addEventListener("touchstart", startDrawing);
+  canvas.addEventListener("touchend", stopDrawing);
+  canvas.addEventListener("touchmove", draw);
 
   function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);

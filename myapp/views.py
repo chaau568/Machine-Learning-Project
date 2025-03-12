@@ -11,6 +11,12 @@ from .models import User_Details
 
 def addToDB(model, predict, confidence):
   confidenceTostr = str(confidence)
+
+  if User_Details.objects.count() >= 100:
+    oldest_entry = User_Details.objects.order_by('id').first()
+    if oldest_entry:
+      oldest_entry.delete()
+
   User_Details.objects.create(
     model = model,
     predict = predict,

@@ -1,12 +1,27 @@
 {% extends "base.html" %} {% block title %}
 <title>Emotion Details</title>
+<style>
+  .container {
+    max-width: 100%;
+    padding: 20px;
+  }
+  .section {
+    max-width: 100%;
+  }
+  .responsive-img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+</style>
 {% endblock %} {% block content %}
 <div class="container mt-5">
   <h1 class="text-center mb-4">
     แบบจำลองการจำแนกอารมณ์ (Emotion Classification Model)
   </h1>
 
-  <section class="mb-4">
+  <section class="section mb-4">
     <h2>1. ข้อมูลชุด (Dataset)</h2>
     <p>
       <strong>แหล่งที่มาของข้อมูล:</strong>
@@ -50,12 +65,12 @@
     </p>
   </section>
 
-  <section class="mb-4">
+  <section class="section mb-4">
     <h2>2. การแบ่งข้อมูล</h2>
     <p>ใช้ฟังก์ชัน train_test_split จากไลบรารี scikit-learn ในการแบ่งข้อมูล</p>
     <ul>
-      <li>ข้อมูลสำหรับฝึก (Train): 70%</li>
-      <li>ข้อมูลสำหรับทดสอบ (Test): 30%</li>
+      <li><code>ข้อมูลสำหรับฝึก (Train): 70%</code></li>
+      <li><code>ข้อมูลสำหรับทดสอบ (Test): 30%</code></li>
     </ul>
   </section>
 
@@ -63,15 +78,16 @@
     <h2>3. การเลือกแบบจำลอง (Model)</h2>
     <p>ทดลองใช้หลายแบบจำลองและเปรียบเทียบค่าความแม่นยำ (Accuracy):</p>
     <ul>
-      <li>Logistic Regression: 63.23%</li>
-      <li>Support Vector Classification (SVC): 63.75%</li>
-      <li>RandomForestClassifier: 55.40%</li>
+      <li>Logistic Regression: <code>63.23%</code></li>
+      <li>Support Vector Classification (SVC): <code>63.75%</code></li>
+      <li>RandomForestClassifier: <code>55.40%</code></li>
     </ul>
     <div class="box">
       <h2>กราฟ Accuracy และ Loss ของแต่ละ Model</h2>
       <img
         src="data:image/png;base64,{{ model_accuracy }}"
         alt="Accuracy and Loss Graph"
+        class="responsive-img"
       />
     </div>
     <p>
@@ -80,7 +96,7 @@
     </p>
   </section>
 
-  <section class="mb-4">
+  <section class="section mb-4">
     <h2>4. การออกแบบแบบจำลอง</h2>
     <p>
       <strong>CountVectorizer:</strong>
@@ -115,7 +131,7 @@
     </ul>
   </section>
 
-  <section class="mb-4">
+  <section class="section mb-4">
     <h2>5. ทฤษฎีของอัลกอริทึม</h2>
     <p>
       <strong>Logistic Regression:</strong> เป็นอัลกอริทึมที่ใช้สำหรับ
@@ -137,11 +153,13 @@
         ค่าความน่าจะเป็น (Probability) <br />
         ผลลัพธ์ที่ได้จะเป็นค่าความน่าจะเป็นสำหรับแต่ละคลาส <br />
         โดยที่ค่าทุกค่าจะอยู่ระหว่าง 0 ถึง 1 และรวมกันแล้วจะเป็น 1 เช่น: <br />
-        <pre>
-          <b>สำหรับคลาส 1: P1=0.7P_1 = 0.7</b>
-          <b>สำหรับคลาส 2: P2=0.2P_2 = 0.2</b>
-          <b>สำหรับคลาส 3: P3=0.1P_3 = 0.1</b>
-        </pre>
+        <p>
+          <code
+            >สำหรับคลาส 1: P1=0.7P_1 = 0.7 <br />
+            สำหรับคลาส 2: P2=0.2P_2 = 0.2 <br />
+            สำหรับคลาส 3: P3=0.1P_3 = 0.1</code
+          >
+        </p>
       </li>
       <li>
         การเลือกคลาสที่ดีที่สุด <br />
@@ -201,7 +219,7 @@
     </ul>
   </section>
 
-  <section class="mb-4">
+  <section class="section mb-4">
     <h2>6. การบันทึกผลการฝึกแบบจำลอง</h2>
     <p>
       ใช้ <code>pickle.dump</code> ในการบันทึกข้อมูลการฝึกเป็นไฟล์ .pkl โดย .pkl
