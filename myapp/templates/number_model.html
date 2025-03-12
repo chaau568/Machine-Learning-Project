@@ -69,7 +69,7 @@
   document
     .getElementById("imageForm")
     .addEventListener("submit", function (event) {
-      event.preventDefault(); // ป้องกันการส่งฟอร์มทันที
+      event.preventDefault();
 
       const imageData = canvas.toDataURL("image/png");
 
@@ -84,7 +84,7 @@
         ctxResized.drawImage(img, 0, 0, 28, 28);
         document.getElementById("imageInput").value =
           canvasResized.toDataURL("image/png");
-        document.getElementById("imageForm").submit(); // ส่งฟอร์มไปยัง backend
+        document.getElementById("imageForm").submit();
       };
     });
 </script>
