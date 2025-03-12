@@ -4,24 +4,13 @@ import numpy as np
 import pandas as pd 
 from PIL import Image 
 from io import BytesIO
-from django.http import JsonResponse 
-from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from .data.emotion import use_model as model_emo
 from .data.number import used_model as model_num
 from .models import User_Details
 
-latest_result = {
-    "predict": None,
-    "confidence": None,
-    "graph": None
-}
-check = 0
-
 def addToDB(model, predict, confidence):
   confidenceTostr = str(confidence)
-  print(confidence, confidenceTostr)
-  print(type(confidenceTostr))
   User_Details.objects.create(
     model = model,
     predict = predict,
@@ -73,7 +62,6 @@ def number_details(request):
     accuracy_loss_plot = base64.b64encode(img_file.read()).decode('utf-8')
 
   class_count_path = pd.read_csv('myapp/data/details_data/class_counts.csv')
-  print(class_count_path.columns)
   class_details = class_count_path[['Class', 'Train', 'Test']]
   class_count = class_details.to_dict(orient='records')
 
@@ -95,42 +83,37 @@ def process_image_function(image_data):
 
   result = model_num.predict(img_array)
   graph = model_num.graph(result['all_predictions'])  
-
-  global check
-  check = 1
-  global latest_result
-  latest_result['predict'] = int(result.get('predict'))
-  latest_result['confidence'] = round(float(result.get('confidence')), 4)
-  latest_result['graph'] = graph
-  addToDB("Digit", latest_result['predict'], latest_result['confidence'])
-      
-# @csrf_exempt
-def process_image(request):
-  if request.method == "POST":
-    try:
-      data = json.loads(request.body)
-      image_data = data.get("image", "")
-
-      if not image_data:
-        return JsonResponse({"error": "No image data"}, status=400)
-
-      process_image_function(image_data)
-
-      return JsonResponse({"message": "Image processed successfully!"})
-    except Exception as e:
-      return JsonResponse({"error": str(e)}, status=500)
-
-  return JsonResponse({"error": "Invalid request"}, status=400)
+  details = {
+    "predict": None,
+    "confidence": None,
+    "graph": None
+  }
+  details['predict'] = int(result.get('predict'))
+  details['confidence'] = round(float(result.get('confidence')), 4)
+  details['graph'] = graph
+  addToDB("Digit", details['predict'], details['confidence'])
+  return details
 
 def show_result_num(request):
-  global check
-  if check == 0:
-    global latest_result
-    latest_result['predict'] = None
-    latest_result['confidence'] = None
-    latest_result['graph'] = None
-  check = 0
-  return render(request, 'show_result_num.html', {'details': latest_result})
+  if request.method == "POST":
+    try:
+      image_data = request.POST.get("image", "")
+
+      if not image_data:
+        return render(request, "error_page.html", {"message": "No image data received"})
+      details = {
+        "predict": None,
+        "confidence": None,
+        "graph": None
+      }
+
+      details = process_image_function(image_data)
+
+      return render(request, "show_result_num.html", {"details": details})
+    except Exception as e:
+      return render(request, "error_page.html", {"message": str(e)})
+
+  return render(request, "error_page.html", {"message": "Invalid request"})
 
 def user_details(request):
   data = User_Details.objects.all()

@@ -11,6 +11,5 @@ urlpatterns = [
   path('show_result_num/', views.show_result_num, name='show_result_num'),
   path('number_details/', views.number_details, name='number_details'),
   path('number_model/', views.number_model, name='number_model'),
-  path("process_image/", views.process_image, name="process_image"),
   path('user_details/', views.user_details, name='user_details'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

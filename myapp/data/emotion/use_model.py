@@ -9,19 +9,19 @@ import numpy as np
 import pandas as pd 
 import matplotlib.pyplot as plt 
 
+file_path = os.path.join('myapp', 'data', 'emotion', 'model.pkl')
+if os.path.exists(file_path):
+  with open(file_path, 'rb') as f:
+    loaded_model = pickle.load(f)
+  # print("Model loaded successfully!")
+else:
+  print(f"Error: File '{file_path}' not found!")
+
+classes = loaded_model.classes_
+
 def predict(user_input):
-  file_path = os.path.join('myapp', 'data', 'emotion', 'model.pkl')
-  if os.path.exists(file_path):
-    with open(file_path, 'rb') as f:
-      loaded_model = pickle.load(f)
-    print("Model loaded successfully!")
-  else:
-    print(f"Error: File '{file_path}' not found!")
-
-  classes = loaded_model.classes_
-
   if not user_input:
-    return "Error: Not found input"
+    return None
   
   y_pred_prob = loaded_model.predict_proba([user_input])[0]
   max_class_index = np.argmax(y_pred_prob)
@@ -34,16 +34,6 @@ def predict(user_input):
   return result
 
 def graph(user_input):
-  file_path = os.path.join('myapp', 'data', 'emotion', 'model.pkl')
-  if os.path.exists(file_path):
-    with open(file_path, 'rb') as f:
-      loaded_model = pickle.load(f)
-    print("Model loaded successfully!")
-  else:
-    print(f"Error: File '{file_path}' not found!")
-
-  classes = loaded_model.classes_
-
   if not user_input:
     return None
   

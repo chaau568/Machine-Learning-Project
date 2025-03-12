@@ -8,6 +8,9 @@ import pandas as pd
 import numpy as np 
 import matplotlib.pyplot as plt 
 
+# โหลดโมเดลครั้งเดียว
+loaded_model = tf.keras.models.load_model('myapp/data/number/model.h5', compile=False)
+
 def predict(user_input):
     if user_input.shape != (28, 28):
         print("Input image must be of size 28x28")
@@ -17,9 +20,6 @@ def predict(user_input):
     user_input = np.expand_dims(user_input, axis=-1)  # เพิ่มมิติที่ 3 (channels) เพื่อให้มีขนาดเป็น (28, 28, 1)
     user_input = np.expand_dims(user_input, axis=0)   # เพิ่มมิติที่ 0 (batch size) เพื่อให้มีขนาดเป็น (1, 28, 28, 1)
     
-    # โหลดโมเดล
-    loaded_model = tf.keras.models.load_model('myapp/data/number/model.h5')
-    
     # ทำนายผล
     predictions = loaded_model.predict(user_input)[0]  # ได้เป็น array ขนาด (10,)
     
@@ -28,25 +28,26 @@ def predict(user_input):
     all_confidences = predictions * 100  
 
     result = {
-        'predict': predicted_class,          # Class ที่โมเดลทำนาย
-        'confidence': confidence,  # ค่าความมั่นใจของ class นั้น
-        'all_predictions': all_confidences  # รายการค่าความมั่นใจของทุกคลาส
+        'predict': predicted_class,          
+        'confidence': confidence,  
+        'all_predictions': all_confidences  
     }
     return result
+
 def graph(confidence):
-    classes = np.arange(10)  # หมายเลข 0-9 (10 คลาส)
-    confidence_scores = [c * 1 for c in confidence]  # แปลงเป็นเปอร์เซ็นต์
+    classes = np.arange(10)  
+    confidence_scores = [c * 1 for c in confidence]  
 
     colors = plt.cm.get_cmap('tab10', 10)(range(10))
 
     plt.figure(figsize=(6, 6))
-    plt.bar(classes, confidence_scores, color=colors)  # สร้าง bar chart
+    plt.bar(classes, confidence_scores, color=colors)  
     
     plt.xlabel("Digit Class")
     plt.ylabel("Confidence (%)")
     plt.title("Predicted Probabilities")
-    plt.xticks(classes)  # กำหนดให้แกน X เป็น 0-9
-    plt.ylim(0, 100)  # กำหนดช่วง Y ให้อยู่ที่ 0-100%
+    plt.xticks(classes)  
+    plt.ylim(0, 100) 
 
     for i, score in enumerate(confidence_scores):
         plt.text(i, score + 2, f"{score:.2f}%", ha='center', fontsize=10)

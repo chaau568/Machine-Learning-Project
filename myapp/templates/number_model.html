@@ -16,28 +16,30 @@
           <h2 class="mb-4 fw-bold text-primary">
             Draw the numbers 0 to 9 to predict
           </h2>
+          <form id="imageForm" action="/show_result_num/" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="image" id="imageInput" />
+            <canvas
+              id="canvas"
+              width="420"
+              height="420"
+              class="rounded shadow"
+            ></canvas>
+            <br />
 
-          <!-- Canvas -->
-          <canvas
-            id="canvas"
-            width="420"
-            height="420"
-            class="rounded shadow"
-          ></canvas>
-          <br />
-
-          <!-- Buttons -->
-          <div class="mt-4">
-            <button class="btn btn-danger me-2" onclick="clearCanvas()">
-              🧹 Clear
-            </button>
-            <button class="btn btn-success me-2" onclick="sendToServer()">
-              📤 Send
-            </button>
-            <a href="/show_result_num/" class="btn btn-primary"
-              >📊 Show Results</a
-            >
-          </div>
+            <div class="mt-4">
+              <button
+                type="button"
+                class="btn btn-danger me-2"
+                onclick="clearCanvas()"
+              >
+                🧹 Clear
+              </button>
+              <button type="submit" class="btn btn-success me-2">
+                📤 Send
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -47,6 +49,7 @@
 <script>
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
+
   let isDrawing = false;
 
   canvas.addEventListener("mousedown", () => (isDrawing = true));
@@ -63,42 +66,27 @@
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
-  function sendToServer() {
-    const imageData = canvas.toDataURL("image/png");
+  document
+    .getElementById("imageForm")
+    .addEventListener("submit", function (event) {
+      event.preventDefault(); // ป้องกันการส่งฟอร์มทันที
 
-    const img = new Image();
-    img.src = imageData;
-    img.onload = function () {
+      const imageData = canvas.toDataURL("image/png");
+
       const canvasResized = document.createElement("canvas");
       const ctxResized = canvasResized.getContext("2d");
       canvasResized.width = 28;
       canvasResized.height = 28;
-      ctxResized.drawImage(img, 0, 0, 28, 28);
+      const img = new Image();
+      img.src = imageData;
 
-      const resizedImageData = canvasResized.toDataURL("image/png");
-
-      fetch("/process_image/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCSRFToken(),
-        },
-        body: JSON.stringify({ image: resizedImageData }),
-      })
-        .then((response) => response.json())
-        .then((data) => alert(data.message))
-        .catch((error) => console.error("Error:", error));
-    };
-  }
-
-  function getCSRFToken() {
-    return (
-      document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("csrftoken"))
-        ?.split("=")[1] || ""
-    );
-  }
+      img.onload = function () {
+        ctxResized.drawImage(img, 0, 0, 28, 28);
+        document.getElementById("imageInput").value =
+          canvasResized.toDataURL("image/png");
+        document.getElementById("imageForm").submit(); // ส่งฟอร์มไปยัง backend
+      };
+    });
 </script>
 
 {% endblock %}
