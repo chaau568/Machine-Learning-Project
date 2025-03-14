@@ -15,7 +15,7 @@
           <h2 class="text-center mb-4 text-primary fw-bold">
             Predict Your Emotion
           </h2>
-          <form method="post" action="{% url 'show_result_emo' %}">
+          <form method="post" action="/show_result_emo/">
             {% csrf_token %}
             <div class="form-floating mb-3">
               <input
